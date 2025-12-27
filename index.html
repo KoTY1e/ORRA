@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORRAEON | Secret Ancient Language Interface</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --panel-bg: rgba(20, 20, 25, 0.95);
+            --accent-gold: #c5a059;
+            --accent-glow: rgba(197, 160, 89, 0.3);
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --font-runic: 'Segoe UI Historic', 'Noto Sans Runic', 'Courier New', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(30, 30, 40, 1) 0%, rgba(10, 10, 12, 1) 100%),
+                url('https://www.transparenttextures.com/patterns/dark-matter.png');
+        }
+
+        .grimoire-container {
+            width: 95%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grimoire-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            letter-spacing: 12px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .ui-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: #15151a;
+            border-radius: 4px;
+            padding: 3px;
+            border: 1px solid #333;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .translation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .translation-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            letter-spacing: 1.5px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            background: #0d0d11;
+            border: 1px solid #2a2a35;
+            border-radius: 4px;
+            padding: 15px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            resize: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        #output {
+            font-family: var(--font-runic);
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            background: #08080a;
+            color: var(--accent-gold);
+        }
+
+        .action-bar {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            flex: 2;
+            padding: 15px;
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #d4b57a;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 15px;
+            background: #1a1a22;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #252530;
+        }
+
+        .status-msg {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grimoire-container">
+    <header>
+        <h1>ORRAEON</h1>
+        <div class="subtitle">Secret Ritualistic Translation Interface</div>
+    </header>
+
+    <div class="ui-controls">
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('DAILY', this)">Daily</button>
+            <button class="mode-btn" onclick="setMode('RITUAL', this)">Ritual</button>
+            <button class="mode-btn" onclick="setMode('ARCHIVAL', this)">Archival</button>
+        </div>
+        <div id="lang-indicator" style="font-size: 0.7rem; color: var(--accent-gold); align-self: center;">
+            DETECTION: IDLE
+        </div>
+    </div>
+
+    <div class="translation-grid">
+        <div class="input-group">
+            <label>Input Surface</label>
+            <textarea id="input" placeholder="Enter text in English, Arabic, or Orraeon..."></textarea>
+        </div>
+        <div class="input-group">
+            <label>Output Manifestation</label>
+            <textarea id="output" readonly placeholder="Result..."></textarea>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn-primary" onclick="handleTranslate()">Commence Translation</button>
+        <button class="btn-secondary" onclick="copyOutput()">Copy Glyph</button>
+    </div>
+
+    <div class="status-msg" id="status">
+        Ready for incantation.
+    </div>
+</div>
+
+<script>
+/**
+ * ORRAEON LINGUISTIC ENGINE
+ */
+
+const ALPHA_MAP = {
+    'b': 'ᚠ', 'c': 'ᚢ', 'd': 'ᚦ', 'f': 'ᚩ', 'g': 'ᚱ', 'h': 'ᚳ',
+    'j': '𐌲', 'k': 'ᚹ', 'l': 'ᚻ', 'm': 'ᚾ', 'n': 'ᛁ', 'p': 'ᛃ',
+    'q': 'ᛇ', 'r': 'ᛈ', 's': 'ᛉ', 't': 'ᛋ', 'v': 'ᛏ', 'w': 'ᛒ',
+    'x': 'ᛖ', 'y': 'ᛗ', 'z': 'ᛚ',
+    'a': 'ᚨ', 'e': 'ᛂ', 'i': 'ᛃ', 'o': 'ᚣ', 'u': 'ᛇ',
+    'ā': 'ᛠ', 'ē': 'ᛡ', 'ī': 'ᛢ', 'ō': 'ᛣ', 'ū': 'ᛤ'
+};
+
+const DIPHTHONG_MAP = {
+    'ai': 'ᚨᛃ', 'au': 'ᚨᛇ', 'ei': 'ᛂᛃ', 'ou': 'ᚣᛃ'
+};
+
+const NUM_MAP = {
+    '0': '⟁', '1': '⟊', '2': '⟐', '3': '⟡', '4': '⟁̇',
+    '5': '⟠', '6': '⟟', '7': '⟞', '8': '⟝', '9': '⟜'
+};
+
+const GRAMMAR = {
+    past: '☗', future: '☖', negation: '𐎟', question: '⸮',
+    ritual: '✦', possession: '⟁', sentence_seal: '◈'
+};
+
+// Reverse Maps for Decoding
+const REVERSE_ALPHA = Object.fromEntries(Object.entries(ALPHA_MAP).map(([k, v]) => [v, k]));
+const REVERSE_NUM = Object.fromEntries(Object.entries(NUM_MAP).map(([k, v]) => [v, k]));
+
+let currentMode = 'DAILY';
+
+function setMode(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+/**
+ * DETECTION ENGINE
+ */
+function detectLanguage(text) {
+    const orraeonChars = Object.values(ALPHA_MAP).concat(Object.values(GRAMMAR));
+    let score = 0;
+    for (let char of text) {
+        if (orraeonChars.includes(char)) score++;
+    }
+    return score > 2 ? 'ORRAEON' : 'HUMAN';
+}
+
+/**
+ * GRAMMAR ENGINE: HUMAN -> ORRAEON
+ */
+function encodeOrraeon(text) {
+    let cleanText = text.toLowerCase().trim();
+    // Simplified VSO Logic: Reorder first 3 words if sentence is long enough
+    let words = cleanText.split(/\s+/);
+    if (words.length >= 3) {
+        // Assume Subject (0) Verb (1) Object (2) -> Verb Subject Object
+        let s = words[0], v = words[1], o = words[2];
+        words[0] = v; words[1] = s; words[2] = o;
+    }
+
+    let encodedWords = words.map(word => {
+        let isPast = false, isFuture = false, isNegated = false, isPossessive = false;
+        
+        // Detect Tense/Modality (Basic heuristic)
+        if (word.startsWith("past-")) { isPast = true; word = word.replace("past-", ""); }
+        if (word.startsWith("will-")) { isFuture = true; word = word.replace("will-", ""); }
+        if (word.endsWith("-not")) { isNegated = true; word = word.replace("-not", ""); }
+        if (word.endsWith("'s")) { isPossessive = true; word = word.replace("'s", ""); }
+
+        let result = "";
+        
+        // Transliterate Numerals
+        if (!isNaN(word)) {
+            return word.split('').map(d => NUM_MAP[d] || d).join('');
+        }
+
+        // Transliterate Chars
+        let i = 0;
+        while (i < word.length) {
+            let pair = word.substr(i, 2);
+            if (DIPHTHONG_MAP[pair]) {
+                result += DIPHTHONG_MAP[pair];
+                i += 2;
+            } else {
+                result += ALPHA_MAP[word[i]] || word[i];
+                i++;
+            }
+        }
+
+        // Plural Rule: Duplicate last glyph if it was plural
+        if (word.endsWith('s') && word.length > 3) {
+            result += result.slice(-1);
+        }
+
+        // Apply Grammar Markers
+        if (isPast) result = GRAMMAR.past + result;
+        if (isFuture) result = GRAMMAR.future + result;
+        if (isNegated) result = result + GRAMMAR.negation;
+        if (isPossessive) result = result + GRAMMAR.possession;
+
+        return result;
+    });
+
+    let final = encodedWords.join(" ");
+    
+    // Mode Modifiers
+    if (currentMode === 'RITUAL' || currentMode === 'ARCHIVAL') {
+        final = GRAMMAR.ritual + " " + final;
+    }
+
+    // Sentence End
+    if (text.endsWith('?')) {
+        final += " " + GRAMMAR.question;
+    } else {
+        final += " " + GRAMMAR.sentence_seal;
+    }
+
+    return final;
+}
+
+/**
+ * GRAMMAR ENGINE: ORRAEON -> HUMAN
+ */
+function decodeOrraeon(text) {
+    let words = text.split(/\s+/);
+    let decodedWords = words.map(word => {
+        if (word === GRAMMAR.ritual || word === GRAMMAR.sentence_seal) return "";
+        
+        let result = "";
+        let chars = [...word];
+        for (let char of chars) {
+            if (REVERSE_ALPHA[char]) result += REVERSE_ALPHA[char];
+            else if (REVERSE_NUM[char]) result += REVERSE_NUM[char];
+            else if (char === GRAMMAR.past) result += "[PAST] ";
+            else if (char === GRAMMAR.future) result += "[FUTURE] ";
+            else if (char === GRAMMAR.negation) result += "[NOT]";
+            else if (char === GRAMMAR.possession) result += "'s";
+        }
+        return result;
+    });
+
+    // Revert VSO heuristic (Roughly)
+    let dWords = decodedWords.filter(w => w !== "");
+    if (dWords.length >= 3) {
+        let v = dWords[0], s = dWords[1];
+        dWords[0] = s; dWords[1] = v;
+    }
+
+    return dWords.join(" ");
+}
+
+/**
+ * UI CONTROLLER
+ */
+function handleTranslate() {
+    const input = document.getElementById('input').value;
+    const output = document.getElementById('output');
+    const indicator = document.getElementById('lang-indicator');
+    
+    if (!input) return;
+
+    const lang = detectLanguage(input);
+    indicator.innerText = "DETECTION: " + lang;
+
+    if (lang === 'HUMAN') {
+        output.value = encodeOrraeon(input);
+        document.getElementById('status').innerText = "Vibration encoded into the ancient script.";
+    } else {
+        output.value = decodeOrraeon(input);
+        document.getElementById('status').innerText = "The glyphs have surrendered their meaning.";
+    }
+}
+
+function copyOutput() {
+    const output = document.getElementById('output');
+    output.select();
+    document.execCommand('copy');
+    document.getElementById('status').innerText = "Glyphs secured to the clipboard.";
+}
+</script>
+
+</body>
+</html>
