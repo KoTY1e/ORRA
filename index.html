@@ -1,229 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORRAEON | Secret Ancient Language Interface</title>
-
-<style>
-:root {
-    --bg-dark:#0a0a0c;
-    --panel-bg:rgba(20,20,25,.95);
-    --accent-gold:#c5a059;
-    --accent-glow:rgba(197,160,89,.3);
-    --text-main:#e0e0e0;
-    --text-dim:#888;
-    --font-runic:'Segoe UI Historic','Noto Sans Runic','Courier New',monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-    background:radial-gradient(circle,#1e1e28,#0a0a0c);
-    color:var(--text-main);
-    font-family:Segoe UI,Tahoma,sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-.grimoire-container{
-    width:95%;
-    max-width:900px;
-    background:var(--panel-bg);
-    border:1px solid var(--accent-gold);
-    border-radius:8px;
-    padding:40px;
-    box-shadow:0 0 40px #000,0 0 20px var(--accent-glow);
-}
-header{text-align:center;margin-bottom:30px}
-h1{
-    letter-spacing:12px;
-    color:var(--accent-gold);
-    text-shadow:0 0 10px var(--accent-glow);
-}
-.subtitle{font-size:.8rem;color:var(--text-dim);letter-spacing:2px}
-.mode-selector{
-    display:flex;
-    background:#15151a;
-    border-radius:4px;
-    padding:3px;
-}
-.mode-btn{
-    padding:8px 16px;
-    border:none;
-    background:none;
-    color:#888;
-    cursor:pointer;
-}
-.mode-btn.active{
-    background:var(--accent-gold);
-    color:#000;
-    font-weight:bold;
-}
-.translation-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-@media(max-width:768px){.translation-grid{grid-template-columns:1fr}}
-textarea{
-    width:100%;
-    height:240px;
-    background:#0d0d11;
-    border:1px solid #2a2a35;
-    color:#e0e0e0;
-    padding:15px;
-    resize:none;
-}
-#output{
-    font-family:var(--font-runic);
-    font-size:1.3rem;
-    letter-spacing:2px;
-    color:var(--accent-gold);
-}
-.action-bar{
-    display:flex;
-    gap:15px;
-    margin-top:20px;
-}
-.btn-primary{
-    flex:2;
-    padding:15px;
-    background:var(--accent-gold);
-    border:none;
-    font-weight:bold;
-    letter-spacing:3px;
-    cursor:pointer;
-}
-.btn-secondary{
-    flex:1;
-    padding:15px;
-    background:#1a1a22;
-    color:var(--accent-gold);
-    border:1px solid var(--accent-gold);
-    cursor:pointer;
-}
-.status-msg{
-    margin-top:10px;
-    font-size:.75rem;
-    text-align:center;
-    color:#888;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORRAEON | Authentic Protocol V7.0</title>
+    <style>
+        :root { --gold: #c5a059; --bg: #050507; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: #e0e0e0; font-family: 'Segoe UI Historic', 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { width: 95%; max-width: 900px; background: #0d0d12; border: 2px solid var(--gold); padding: 30px; border-radius: 4px; box-shadow: 0 0 50px #000; }
+        header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        h1 { color: var(--gold); letter-spacing: 12px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        textarea { width: 100%; height: 320px; background: #000; border: 1px solid #444; color: #fff; padding: 18px; font-size: 1.2rem; resize: none; outline: none; line-height: 1.6; transition: 0.3s; }
+        textarea:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
+        #output { color: var(--gold); font-family: 'Segoe UI Historic', serif; }
+        .action-zone { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 18px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; }
+        .btn-run { background: var(--gold); color: #000; }
+        .btn-copy { background: #1a1a22; color: var(--gold); border: 1px solid var(--gold); }
+        .status-bar { margin-top: 15px; font-size: 0.75rem; color: #666; text-align: center; font-weight: bold; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
-
 <body>
-<div class="grimoire-container">
-<header>
-<h1>ORRAEON</h1>
-<div class="subtitle">Secret Ritualistic Translation Interface</div>
-</header>
 
-<div class="mode-selector">
-<button class="mode-btn active" onclick="setMode('DAILY',this)">Daily</button>
-<button class="mode-btn" onclick="setMode('RITUAL',this)">Ritual</button>
-<button class="mode-btn" onclick="setMode('ARCHIVAL',this)">Archival</button>
-</div>
+<div class="container">
+    <header>
+        <h1>ORRAEON</h1>
+        <p style="color: #555; font-size: 0.75rem;">THE ACCURATE SECRET LANGUAGE SYSTEM</p>
+    </header>
 
-<div class="translation-grid">
-<textarea id="input" placeholder="Enter Human or Orraeon text..."></textarea>
-<textarea id="output" readonly placeholder="Manifestation..."></textarea>
-</div>
+    <div class="grid">
+        <textarea id="input" placeholder=" Enter Human or Orraeon text..."></textarea>
+        <textarea id="output" readonly placeholder="Manifestation..."></textarea>
+    </div>
 
-<div class="action-bar">
-<button class="btn-primary" onclick="handleTranslate()">Commence Translation</button>
-<button class="btn-secondary" onclick="copyOutput()">Copy Glyph</button>
-</div>
+    <div class="action-zone">
+        <button class="btn-run" onclick="mainEngine()"> Commence Translation</button>
+        <button class="btn-copy" onclick="copyResult()"> Copy Glyph</button>
+    </div>
 
-<div class="status-msg" id="status">Ready.</div>
+    <div class="status-bar" id="status">Ready for use</div>
 </div>
 
 <script>
-/* ===== ORRAEON CORE ===== */
+    // الجداول الرسمية بناءً على آخر تحديث لك
+    const ALPHA = {
+        'a':'ᚨ','b':'ᚠ','c':'ᚢ','d':'ᚦ','e':'ᛂ','f':'ᚩ','g':'ᚱ','h':'ᚳ',
+        'i':'ᛃ','j':'𐌲','k':'ᚹ','l':'ᚻ','m':'ᚾ','n':'ᛁ','o':'ᚣ','p':'ᛈ',
+        'q':'ᛇ','r':'ᛉ','s':'ᛋ','t':'ᛏ','u':'ᛤ','v':'ᛒ','w':'ᛖ','x':'ᛗ','y':'ᛚ','z':'ᛠ'
+    };
+    const NUMS = {
+        '0':'⟀','1':'⟁','2':'⟐','3':'⟡','4':'⟢','5':'⟠','6':'⟟','7':'⟞','8':'⟝','9':'⟜'
+    };
+    const MARKS = {
+        '?':'⸮','!':'❗','.':'◉',',':'⸹',';':'⸷',':':'⸸','…':'⋯','(':'⸀',')':'⸁','"':'⸂',"'":'⸃'
+    };
 
-const ALPHA_MAP={
-a:'ᚨ',b:'ᚠ',c:'ᚢ',d:'ᚦ',e:'ᛂ',f:'ᚩ',g:'ᚱ',h:'ᚳ',
-i:'ᛃ',j:'𐌲',k:'ᚹ',l:'ᚻ',m:'ᚾ',n:'ᛁ',o:'ᚣ',
-p:'ᛃ',q:'ᛇ',r:'ᛈ',s:'ᛉ',t:'ᛋ',u:'ᛇ',v:'ᛏ',
-w:'ᛒ',x:'ᛖ',y:'ᛗ',z:'ᛚ'
-};
+    // جداول عكسية صارمة لفك التشفير
+    const REV_ALPHA = Object.fromEntries(Object.entries(ALPHA).map(([k, v]) => [v, k]));
+    const REV_NUMS = Object.fromEntries(Object.entries(NUMS).map(([k, v]) => [v, k]));
+    const REV_MARKS = Object.fromEntries(Object.entries(MARKS).map(([k, v]) => [v, k]));
 
-const NUM_MAP={
-0:'⟁',1:'⟊',2:'⟐',3:'⟡',4:'⟁̇',
-5:'⟠',6:'⟟',7:'⟞',8:'⟝',9:'⟜'
-};
+    function mainEngine() {
+        const input = document.getElementById('input').value;
+        const outField = document.getElementById('output');
+        const status = document.getElementById('status');
 
-const PUNCT_MAP={
-'?':'⸮',
-'!':'❗',
-'.':'◉',
-',':'⟡',
-';':'⟁',
-':':'⟁̇',
-'…':'⋯',
-'(':'⟊',
-')':'⟋',
-'"':'〚',
-"'":'ˈ'
-};
+        if (!input.trim()) return;
 
-const GRAMMAR={
-ritual:'✦',
-seal:'◈'
-};
+        // فحص نوع النص (هل هو رموز أوريون؟)
+        // نبحث عن أي حرف من الأبجدية الرمزية
+        const isOrraeon = /[ᚨᚠᚢᚦᛂᚩᚱᚳᛃ𐌲ᚹᚻᚾᛁᚣᛈᛇᛉᛋᛏᛤᛒᛖᛗᛚᛠ]/.test(input);
 
-const REVERSE_ALPHA=Object.fromEntries(Object.entries(ALPHA_MAP).map(([k,v])=>[v,k]));
-const REVERSE_NUM=Object.fromEntries(Object.entries(NUM_MAP).map(([k,v])=>[v,k]));
-const REVERSE_PUNCT=Object.fromEntries(Object.entries(PUNCT_MAP).map(([k,v])=>[v,k]));
+        if (isOrraeon) {
+            outField.value = decode(input);
+            status.innerText = "STATUS: Deciphered to English";
+        } else {
+            outField.value = encode(input);
+            status.innerText = "STATUS: Encoded to Orraeon";
+        }
+    }
 
-let currentMode='DAILY';
+    function encode(text) {
+        let lines = text.toLowerCase().split('\n');
+        return lines.map(line => {
+            let words = line.trim().split(/\s+/);
+            // تحويل الكلمات بشكل مباشر 1:1 لضمان الدقة
+            let encodedWords = words.map(word => {
+                return Array.from(word).map(char => {
+                    return ALPHA[char] || NUMS[char] || MARKS[char] || char;
+                }).join('');
+            });
+            let resultLine = encodedWords.join(' ');
+            // إضافة الختم في نهاية السطور غير المنتهية بترقيم
+            if (resultLine && !/[◉⸮❗]/.test(resultLine)) resultLine += " ◈";
+            return resultLine;
+        }).join('\n');
+    }
 
-function setMode(m,b){
-currentMode=m;
-document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
-b.classList.add('active');
-}
+    function decode(text) {
+        // تنظيف النص من أختام الجمل (◈) والرموز الطقوسية (✦)
+        let cleanText = text.replace(/[◈✦]/g, '');
+        let lines = cleanText.split('\n');
 
-function detectLanguage(text){
-let score=0;
-[...text].forEach(c=>{
-if(REVERSE_ALPHA[c]||REVERSE_NUM[c]||REVERSE_PUNCT[c]) score++;
-});
-return score>2?'ORRAEON':'HUMAN';
-}
+        return lines.map(line => {
+            let words = line.trim().split(/\s+/);
+            let decodedWords = words.map(word => {
+                let decodedWord = "";
+                const glyphs = Array.from(word); // معالجة اليونيكود بشكل صحيح
+                for (let g of glyphs) {
+                    decodedWord += REV_ALPHA[g] || REV_NUMS[g] || REV_MARKS[g] || g;
+                }
+                return decodedWord;
+            });
+            return decodedWords.join(' ');
+        }).join('\n');
+    }
 
-function encodeOrraeon(text){
-let result='';
-for(let c of text.toLowerCase()){
-result+=ALPHA_MAP[c]||NUM_MAP[c]||PUNCT_MAP[c]||c;
-}
-if(currentMode!=='DAILY') result=GRAMMAR.ritual+' '+result;
-return result+' '+GRAMMAR.seal;
-}
-
-function decodeOrraeon(text){
-let out='';
-for(let c of text){
-out+=REVERSE_ALPHA[c]||REVERSE_NUM[c]||REVERSE_PUNCT[c]||'';
-}
-return out;
-}
-
-function handleTranslate(){
-const input=document.getElementById('input').value;
-if(!input) return;
-const out=document.getElementById('output');
-const lang=detectLanguage(input);
-out.value=lang==='HUMAN'?encodeOrraeon(input):decodeOrraeon(input);
-document.getElementById('status').innerText=
-lang==='HUMAN'?'Encoded into Orraeon.':'Decoded into Human.';
-}
-
-function copyOutput(){
-const o=document.getElementById('output');
-o.select();
-document.execCommand('copy');
-document.getElementById('status').innerText='Copied.';
-}
+    function copyResult() {
+        const out = document.getElementById('output');
+        out.select();
+        document.execCommand('copy');
+        document.getElementById('status').innerText = "Glyphs secured to the clipboard";
+    }
 </script>
+
 </body>
 </html>
