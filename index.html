@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORRAEON | Final Stable System</title>
+    <title>ORRAEON</title>
     <style>
         :root {
             --gold: #c5a059;
@@ -155,11 +155,11 @@
     <div class="translation-area">
         <div class="box">
             <label>Human Input</label>
-            <textarea id="input" placeholder="Write here... example: The king sleeps"></textarea>
+            <textarea id="input" placeholder="..."></textarea>
         </div>
         <div class="box">
             <label>Orraeon Output</label>
-            <textarea id="output" readonly placeholder="Result appears here..."></textarea>
+            <textarea id="output" readonly placeholder="..."></textarea>
         </div>
     </div>
 
@@ -172,7 +172,6 @@
 </div>
 
 <script>
-    // --- 1. DATA MAPPING (البيانات الصج) ---
     const ALPHA = {
         'a':'ᚨ','b':'ᚠ','c':'ᚢ','d':'ᚦ','e':'ᛂ','f':'ᚩ','g':'ᚱ','h':'ᚳ',
         'i':'ᛃ','j':'𐌲','k':'ᚹ','l':'ᚻ','m':'ᚾ','n':'ᛁ','o':'ᚣ','p':'ᛈ',
@@ -194,13 +193,9 @@
         '(':'⸀', ')':'⸁',
         '"':'⸂', "'":'⸃'
     };
-
-    // إنشاء الجداول العكسية آلياً (لضمان عدم الخطأ)
     const REV_ALPHA = Object.fromEntries(Object.entries(ALPHA).map(([k, v]) => [v, k]));
     const REV_NUMS = Object.fromEntries(Object.entries(NUMS).map(([k, v]) => [v, k]));
     const REV_MARKS = Object.fromEntries(Object.entries(MARKS).map(([k, v]) => [v, k]));
-
-    // --- 2. MAIN LOGIC ---
 
     function runTranslator() {
         const inputField = document.getElementById('input');
@@ -213,10 +208,7 @@
             return;
         }
 
-        // الكشف الذكي: هل النص يحتوي على أي رمز من رموز أوريون؟
-        // نجمع كل الرموز الممكنة في مصفوفة واحدة للفحص
         const allGlyphs = [...Object.values(ALPHA), ...Object.values(NUMS), ...Object.values(MARKS)];
-        // إذا وجدنا رمزاً واحداً على الأقل، نعتبر النص "أوريون" ونقوم بفك تشفيره
         const isOrraeon = Array.from(text).some(char => allGlyphs.includes(char));
 
         try {
@@ -232,36 +224,26 @@
             status.innerText = "Error in processing. Try simplified text.";
         }
     }
-
-    // --- 3. ENCODE (Human -> Orraeon) ---
     function encode(text) {
-        // تقسيم النص إلى أسطر للحفاظ على التنسيق
         let lines = text.toLowerCase().split('\n');
         
         return lines.map(line => {
-            // تقسيم السطر إلى كلمات
             let words = line.trim().split(/\s+/);
-            
-            // تطبيق قاعدة VSO (تبديل الفعل والفاعل)
-            // *تصحيح الخطأ السابق*: نتأكد أن هناك كلمتين على الأقل قبل التبديل
+
             if (words.length >= 2) {
                 let temp = words[0];
                 words[0] = words[1];
                 words[1] = temp;
             }
 
-            // تحويل الكلمات
             let encodedWords = words.map(word => {
-                // استخدام Array.from للتعامل مع الحروف بشكل صحيح
                 return Array.from(word).map(char => {
                     return ALPHA[char] || NUMS[char] || MARKS[char] || char;
                 }).join('');
             });
 
-            // تجميع السطر
             let resultLine = encodedWords.join(' ');
-            
-            // إضافة الختم (◈) إذا كان السطر يحتوي على نص ولا ينتهي بترقيم
+
             if (resultLine.length > 0 && !/[◉⸮❗]/.test(resultLine)) {
                 resultLine += " ◈";
             }
@@ -270,24 +252,19 @@
         }).join('\n');
     }
 
-    // --- 4. DECODE (Orraeon -> Human) ---
     function decode(text) {
-        // إزالة الأختام (◈) قبل البدء
         let cleanText = text.replace(/◈/g, '');
         let lines = cleanText.split('\n');
 
         return lines.map(line => {
             let words = line.trim().split(/\s+/);
-            
-            // تحويل الرموز إلى حروف
+
             let decodedWords = words.map(word => {
                 return Array.from(word).map(char => {
                     return REV_ALPHA[char] || REV_NUMS[char] || REV_MARKS[char] || char;
                 }).join('');
             });
 
-            // عكس قاعدة VSO (إعادة الفعل والفاعل لمكانهم الطبيعي في الإنجليزية)
-            // *تصحيح الخطأ*: نتأكد من وجود كلمتين
             if (decodedWords.length >= 2) {
                 let temp = decodedWords[0];
                 decodedWords[0] = decodedWords[1];
@@ -297,8 +274,7 @@
             return decodedWords.join(' ');
         }).join('\n');
     }
-
-    // --- 5. UTILS ---
+    
     function copyText() {
         const out = document.getElementById('output');
         out.select();
